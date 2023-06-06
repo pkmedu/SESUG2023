@@ -1,0 +1,105 @@
+5283
+5284  title;
+5285  %let Path = C:\SESUG_2023;
+5286  options validvarname=any;
+5287  Libname XL XLSX "&Path\SAS_MEPS_zip_links_2023-06-05.xlsx";
+NOTE: Libref XL was successfully assigned as follows:
+      Engine:        XLSX
+      Physical Name: C:\SESUG_2023\SAS_MEPS_zip_links_2023-06-05.xlsx
+5288  Libname new "&Path";
+NOTE: Libref NEW was successfully assigned as follows:
+      Engine:        V9
+      Physical Name: C:\SESUG_2023
+5289  data new.SAS_Output;
+5290    set XL.sheet1;
+5291  run;
+
+NOTE: The import data set has 1178 observations and 5 variables.
+NOTE: There were 1178 observations read from the data set XL.sheet1.
+NOTE: The data set NEW.SAS_OUTPUT has 1178 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+
+
+5292  libname XL CLEAR;
+NOTE: Libref XL has been deassigned.
+5293
+5294
+5295  %let xPath = C:\Python\Web_scraping\output;
+5296  options validvarname=any;
+5297  Libname XL XLSX "&xPath\MEPS_zip_links_2023-06-06.xlsx";
+NOTE: Libref XL was successfully assigned as follows:
+      Engine:        XLSX
+      Physical Name: C:\Python\Web_scraping\output\MEPS_zip_links_2023-06-06.xlsx
+5298  Libname new "&Path";
+NOTE: Libref NEW was successfully assigned as follows:
+      Engine:        V9
+      Physical Name: C:\SESUG_2023
+5299  data new.Python_Output;
+5300    set XL.sheet1;
+5301  run;
+
+NOTE: The import data set has 1179 observations and 5 variables.
+NOTE: There were 1179 observations read from the data set XL.sheet1.
+NOTE: The data set NEW.PYTHON_OUTPUT has 1179 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+
+
+5302  libname XL CLEAR;
+NOTE: Libref XL has been deassigned.
+5303
+5304
+5305  proc sort data=new.sas_output out=sas_output nodupkey;
+5306  by _ALL_;
+5307  run;
+
+NOTE: There were 1178 observations read from the data set NEW.SAS_OUTPUT.
+NOTE: 0 observations with duplicate key values were deleted.
+NOTE: The data set WORK.SAS_OUTPUT has 1178 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+
+
+5308
+5309  proc sort data=new.python_output out=python_output nodupkey;
+5310  by _ALL_;
+5311  run;
+
+NOTE: There were 1179 observations read from the data set NEW.PYTHON_OUTPUT.
+NOTE: 0 observations with duplicate key values were deleted.
+NOTE: The data set WORK.PYTHON_OUTPUT has 1179 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+
+
+5312
+5313  data both not_both;
+5314  merge sas_output (in=a) python_output (in=b); by _ALL_;
+5315  if a=b then output both;
+5316  else if b=1 and a ne 1 then output not_both;
+5317  run;
+
+NOTE: There were 1178 observations read from the data set WORK.SAS_OUTPUT.
+NOTE: There were 1179 observations read from the data set WORK.PYTHON_OUTPUT.
+NOTE: The data set WORK.BOTH has 1178 observations and 5 variables.
+NOTE: The data set WORK.NOT_BOTH has 1 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+
+
+5318  options nocenter ls=155;
+5319  proc print data=not_both noobs;
+5320  run;
+
+NOTE: There were 1 observations read from the data set WORK.NOT_BOTH.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+
+
