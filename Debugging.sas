@@ -19,8 +19,14 @@ filename  pufresp "&path\PUF_LIST_%sysfunc(translate(&pufnum, '_', '-'))..txt";
 		infile pufresp length = reclen lrecl = 32767 end=eof;
 			
 		prx_data_file = prxparse('/<td width="50%" height="0" class="bottomRightgrayBorder">Data File.*, (.+)<\/td>/');
-		prx_zip = prxparse('/<a href="\.\.\/(data_files\/pufs\/.+\.zip)">ZIP<\/a>/');
-		
+		prx_zip = prxparse('/<a href="\.\.\/(data_files(\/pufs)*\/.+\.zip)">ZIP<\/a>/');
+   /************************************************************************************************************************************
+        <td width="50%" class="sectionDividerGrey"><a href="../data_files/pufs/h60dat.zip">ZIP</a> <span class="xsmall">(14 MB)</span>                
+		<td width="50%" class="sectionDividerGrey"><a href="../data_files/h60ssp.zip">ZIP</a> <span class="xsmall">(14 MB)</span> 
+        <td width="50%" class="sectionDividerGrey"><a href="../data_files/pufs/h61dat.zip">ZIP</a> <span class="xsmall">(2.2 MB)</span> 
+		<td width="50%" class="sectionDividerGrey"><a href="../data_files/pufs/h61ssp.zip">ZIP</a> <span class="xsmall">(3.0 MB)</span> 
+                          
+   ********************************************************************************************************************************/	
 		do while (not eof);
 			input html_line $varying32767. reclen;
 			puf_num = "&pufnum.";

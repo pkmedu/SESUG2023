@@ -123,7 +123,8 @@ run;
 		infile pufresp length = reclen lrecl = 32767 end=eof;
 			
 		prx_data_file = prxparse('/<td width="50%" height="0" class="bottomRightgrayBorder">Data File.*, (.+)<\/td>/');
-		prx_zip = prxparse('/<a href="\.\.\/(data_files\/pufs\/.+\.zip)">ZIP<\/a>/');
+        prx_zip = prxparse('/<a href="\.\.\/(data_files(\/pufs)*\/.+\.zip)">ZIP<\/a>/');
+        *prx_zip = prxparse('/<a href="\.\.\/(data_files\/pufs\/.+\.zip)">ZIP<\/a>/');
 		
 		do while (not eof);
 			input html_line $varying32767. reclen;
