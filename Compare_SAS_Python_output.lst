@@ -1,7 +1,0 @@
-data_year     puf_num      meps_file
-
-2001          HC-060       2001 Full Year Consolidated Data File
-
-file_format                    zip_link
-
-SAS transport format           https://meps.ahrq.gov/data_files/h60ssp.zip
