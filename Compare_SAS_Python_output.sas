@@ -2,7 +2,7 @@
 
 %let Path = C:\SESUG_2023;
 options validvarname=any;
-Libname XL XLSX "&Path\SAS_MEPS_zip_links_2023-06-05.xlsx";
+Libname XL XLSX "&Path\SAS_MEPS_zip_links_2023-06-07.xlsx";
 Libname new "&Path";
 data new.SAS_Output;
   set XL.sheet1;
@@ -32,8 +32,5 @@ data both not_both;
 merge sas_output (in=a) python_output (in=b); by _ALL_;
 if a=b then output both;
 else if b=1 and a ne 1 then output not_both;
-run;
-
-proc print data=not_both;
 run;
 
