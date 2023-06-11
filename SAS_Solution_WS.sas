@@ -11,7 +11,7 @@ run;
 options generic;
 data year_values;
     length year 8;
-    infile source dlm='<' expandtabs;
+    infile source dlm='<' expandtabs truncover;
     input @'<option value="'   @'>' year ??;
 if not missing (year);
 run;
@@ -80,7 +80,7 @@ run;
 /* Just keep obs with puf_num beginning HC- */
 data year_list;
 	set year_list_: ;
-	if substr(puf_num, 1, 2) = 'HC';
+	where substr(puf_num, 1, 2) = 'HC';
 run;	
 
 /* De-dup */
