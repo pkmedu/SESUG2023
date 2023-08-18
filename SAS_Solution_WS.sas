@@ -40,12 +40,19 @@ filename source clear;
 	data year_list_&year. (keep=puf_num meps_file data_year);
 	  	length puf_num $15 meps_file $150 data_year $10;
 		infile yearresp length = reclen lrecl = 32767 end=eof;
+
 		/* regex to get the PUF num in the table of results */
+		retain prx_puf;
 		prx_puf = prxparse('/<a href="download_data_files_detail\.jsp\?cboPufNumber=.+\">(.+)<\/a>/');
+
 		/* regex to get the meps file */
+		retain prx_meps;
 	  	prx_meps = prxparse('/<td height="30" align="left" valign="top" class="bottomRightgrayBorder"><div align="left" class="contentStyle">(.+)<\/font>/');
+
 		/* regex for data year */
+		retain prx_data_year;
 	  	prx_data_year = prxparse('/<td width="1" height="30" align="left" valign="top" class="bottomRightgrayBorder"><div align="left" class="contentStyle">(.+)<\/font><\/div><\/td>/');
+
 		/* Read the HTML line by line */
 		do while (not eof);
 			input html_line $varying32767. reclen;	    
@@ -107,9 +114,14 @@ run;
 	data puf_list_%sysfunc(translate(&pufnum, '_', '-')) (keep=puf_num file_format zip_link);
 		length puf_num $15 file_format $150 zip_link $200;
 		infile pufresp length = reclen lrecl = 32767 end=eof;
-			
-		prx_data_file = prxparse('/<td width="50%" height="0" class="bottomRightgrayBorder">Data File.*, (.+)<\/td>/');
-        prx_zip = prxparse('/<a href="\.\.\/(data_files[\/pufs]*\/.+\.zip)">ZIP<\/a>/');
+		
+        /* regex for the data file name */	
+		retain prx_data_file;
+        if _n_= 1 then prx_data_file = prxparse('/<td width="50%" height="0" class="bottomRightgrayBorder">Data File.*, (.+)<\/td>/');
+        
+		/* regex for the zip file download link */
+		retain prx_zip;
+        if _n_= 1 then prx_zip = prxparse('/<a href="\.\.\/(data_files[\/pufs]*\/.+\.zip)">ZIP<\/a>/');
         		
 		do while (not eof);
 			input html_line $varying32767. reclen;
